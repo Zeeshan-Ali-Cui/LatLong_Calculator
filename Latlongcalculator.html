@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Direction Calculator</title>
+  <!-- Add SEO Meta Tags -->
+  <meta name="description" content="Calculate distance between two coordinates with precision. Plan road trips, analyze spatial relationships, and enhance geographical insights effortlessly.">
+  <meta name="keywords" content="calculate distance, distance formula, google maps, coordinates, latitude longitude, gps coordinates, road trip planner, spatial analysis, navigation, geographic insights">
+  <meta name="author" content="Your Name">
+  <!-- Add Open Graph Meta Tags for Social Media -->
+  <meta property="og:title" content="Geographic Distance Calculator">
+  <meta property="og:description" content="Calculate distance between two coordinates with precision. Plan road trips, analyze spatial relationships, and enhance geographical insights effortlessly.">
+  <meta property="og:image" content="url_to_your_image">
+  <meta property="og:url" content="url_to_your_page">
+  <meta property="og:type" content="website">
+  <!-- Add Twitter Meta Tags for Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Geographic Distance Calculator">
+  <meta name="twitter:description" content="Calculate distance between two coordinates with precision. Plan road trips, analyze spatial relationships, and enhance geographical insights effortlessly.">
+  <meta name="twitter:image" content="url_to_your_image">
+  <meta name="twitter:url" content="url_to_your_page">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    #instructions,
+    #coordinatesForm,
+    #result {
+      max-width: 80%;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+
+    label {
+      margin-bottom: 5px;
+      display: block;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    @media only screen and (max-width: 600px) {
+      #instructions,
+      #coordinatesForm,
+      #result {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Direction Calculator</h2>
+
+  <div id="coordinatesForm">
+    <label for="coordinates1">Coordinates 1 (Lat, Lon):</label>
+    <input type="text" id="coordinates1" placeholder="e.g., 34.0522, -118.2437">
+
+    <label for="coordinates2">Coordinates 2 (Lat, Lon):</label>
+    <input type="text" id="coordinates2" placeholder="e.g., 37.7749, -122.4194">
+
+    <button onclick="calculateDistance()">Calculate Distance</button>
+  </div>
+
+  <div id="result">
+    <!-- Results will be displayed here -->
+  </div>
+
+  <div id="instructions">
+    <p>Explore the vastness of geography with our Direction Calculator—a powerful tool designed to calculate distances between two points on the Earth's surface. Whether you're a travel enthusiast planning your next road trip or a professional requiring precise geographic measurements, our Direction Calculator is your go-to solution.</p>
+    <p>To get started, simply input the latitude and longitude coordinates for both points, click "Calculate Distance," and witness the tool unveil the exact measurements in kilometers, miles, and nautical miles. This user-friendly interface makes geographical analysis accessible to everyone.</p>
+    <p>Our Direction Calculator utilizes advanced algorithms to ensure accuracy in distance calculations. The Earth's curvature is taken into account, providing results that closely align with real-world measurements.</p>
+    <p>Feel confident in using this tool for a variety of applications, from planning road trips to understanding the proximity of geographical points. Embrace the precision and convenience offered by the Direction Calculator!</p>
+    <p>Unlocking even more versatility, our Direction Calculator supports various units—kilometers for international planning, miles for local road trips, and nautical miles for maritime considerations. This tool adapts to your preferences, offering flexibility in understanding geographical separation.</p>
+    <p>Geographic intelligence has never been this simple. The tool's accuracy ensures that users, regardless of their background, can seamlessly integrate geographic insights into their projects. From travel enthusiasts planning their next adventure to researchers exploring spatial relationships, the Direction Calculator simplifies complex geographic analyses.</p>
+    <p>For businesses, understanding the proximity of service points or the geographical distribution of customers becomes a strategic advantage. The Direction Calculator serves as a valuable asset, providing businesses with the insights needed to make informed decisions in an ever-connected world.</p>
+    <p>Stay ahead in the digital landscape by incorporating precise geographic data into your content. Boost your SEO efforts, elevate your content, and stay ahead in the competitive digital landscape. The Direction Calculator becomes your ticket to enhanced online visibility, aligning with search engine algorithms that prioritize accuracy.</p>
+    <p>Empower your projects, elevate your content, and embrace the future of geographical analysis with our Direction Calculator. Whether you're a travel enthusiast, researcher, or business professional, this tool opens a world of possibilities. Navigate with confidence, plan with precision, and discover the true potential of geographic insights—start using the Direction Calculator today.</p>
+  </div>
+
+  <script>
+    function calculateDistance() {
+      var coordinates1 = document.getElementById('coordinates1').value.split(',').map(coord => parseFloat(coord.trim()));
+      var coordinates2 = document.getElementById('coordinates2').value.split(',').map(coord => parseFloat(coord.trim()));
+
+      var distanceKm = calculateDistanceBetweenPoints(coordinates1[0], coordinates1[1], coordinates2[0], coordinates2[1]);
+      var distanceMiles = kmToMiles(distanceKm);
+      var distanceNauticalMiles = kmToNauticalMiles(distanceKm);
+
+      document.getElementById('result').innerHTML = `
+        <p>The precise distance between the two points is:</p>
+        <ul>
+          <li>${distanceKm.toFixed(4)} kilometers</li>
+          <li>${distanceMiles.toFixed(4)} miles</li>
+          <li>${distanceNauticalMiles.toFixed(4)} nautical miles</li>
+        </ul>
+      `;
+    }
+
+    function calculateDistanceBetweenPoints(lat1, lon1, lat2, lon2) {
+      var R = 6371; // Radius of the Earth in kilometers
+      var dLat = deg2rad(lat2 - lat1);
+      var dLon = deg2rad(lon2 - lon1);
+      var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      var distance = R * c; // Distance in kilometers
+      return distance;
+    }
+
+    function deg2rad(deg) {
+      return deg * (Math.PI / 180);
+    }
+
+    function kmToMiles(km) {
+      return km * 0.621371; // Conversion factor from kilometers to miles
+    }
+
+    function kmToNauticalMiles(km) {
+      return km * 0.53996; // Conversion factor from kilometers to nautical miles
+    }
+  </script>
+
+</body>
+</html>
